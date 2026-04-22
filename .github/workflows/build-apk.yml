@@ -1,79 +1,46 @@
-name: Build Android APK
-run-name: ${{ github.event.inputs.repository }} ${{ github.event.inputs.branchName && format('{0}', github.event.inputs.branchName) }} ${{ github.event.inputs.subdir && format('[/{0}]', github.event.inputs.subdir) }} :${{ github.event.inputs.taskName }}
-
+name: Build Expo Android APK
 on:
   workflow_dispatch:
     inputs:
-      repository:
-        description: "Git repository URL"
+      repo_url:
+        description: "https://github.com/OMKARREDDY8570/attendanceapp.git"
         required: true
-        default: "https://github.com/android/sunflower"
-      branchName:
-        description: "Git branch name [Optional]"
-        required: false
-        default: ""
-      subdir:
-        description: "Relative subdirectory path when the project is nested [Optional]"
-        required: false
-        default: ""
-      jdkVersion:
-        description: "OpenJDK version: 8, 17, 21, 25, …"
-        required: false
-        default: "17"
-      taskName:
-        description: "build.gradle task name: assembleDebug, assembleRelease, etc."
-        required: false
-        default: "assembleRelease"
+        default: "https://github.com"
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Android SDK is built into this image
+    runs-on: ubuntu-latest
     steps:
-      - name: Setup JDK
-        uses: actions/setup-java@v5
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          distribution: "temurin"
-          java-version: ${{ github.event.inputs.jdkVersion }}
+          repository: ${{ github.event.inputs.repo_url }}
 
-      - name: Clone project
-        run: |
-          if [[ -z "${{ github.event.inputs.branchName }}" ]]; then
-            git clone --recurse-submodules --depth=1 ${{ github.event.inputs.repository }} workspace
-          else
-            git clone --recurse-submodules --depth=1 --branch ${{ github.event.inputs.branchName }} ${{ github.event.inputs.repository }} workspace
-          fi
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-      - name: Build APK
-        working-directory: ./workspace/${{ github.event.inputs.subdir }}
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Prebuild Android Folder
+        run: npx expo prebuild --platform android
+
+      - name: Build APK with Gradle
+        working-directory: ./android
         run: |
-          if [ ! -f "gradlew" ]; then gradle wrapper; fi
           chmod +x gradlew
+          ./gradlew assembleRelease
 
-          if [[ "${{ github.event.inputs.taskName }}" == *Release* ]]; then
-            echo "Task contains 'Release', attempting to sign a release build with a debug key."
-
-            if [ ! -f "$HOME/.android/debug.keystore" ]; then
-              echo "Debug keystore not found. Creating one..."
-
-              keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
-
-              mkdir -p $HOME/.android
-              mv debug.keystore $HOME/.android/debug.keystore
-            fi
-
-            ./gradlew ${{ github.event.inputs.taskName }} \
-              -Pandroid.injected.signing.store.file="$HOME/.android/debug.keystore" \
-              -Pandroid.injected.signing.store.password=android \
-              -Pandroid.injected.signing.key.alias=androiddebugkey \
-              -Pandroid.injected.signing.key.password=android \
-              --stacktrace
-          else
-            ./gradlew ${{ github.event.inputs.taskName }} --stacktrace
-          fi
-
-      - name: Upload the APK artifact with 1 day retention
-        uses: actions/upload-artifact@v6
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
-          path: workspace/**/*.apk
-          name: apk-archive
-          retention-days: 1
+          name: mits-attendance-apk
+          path: android/app/build/outputs/apk/release/*.apk
