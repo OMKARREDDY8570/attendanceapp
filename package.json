@@ -1,0 +1,35 @@
+{
+  "name": "mits-attendance",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "build:apk": "eas build -p android --profile preview"
+  },
+  "dependencies": {
+    "expo": "~54.0.0",
+    "expo-router": "~4.0.0",
+    "expo-status-bar": "~2.0.0",
+    "expo-secure-store": "~14.0.0",
+    "expo-haptics": "~14.0.0",
+    "expo-font": "~13.0.0",
+    "expo-linear-gradient": "~14.0.0",
+    "expo-splash-screen": "~0.29.0",
+    "@expo-google-fonts/outfit": "^0.3.0",
+    "@expo-google-fonts/plus-jakarta-sans": "^0.3.0",
+    "react": "18.3.2",
+    "react-native": "0.76.5",
+    "react-native-reanimated": "~3.16.1",
+    "react-native-gesture-handler": "~2.20.2",
+    "react-native-svg": "15.8.0",
+    "react-native-safe-area-context": "4.12.0",
+    "@react-navigation/native": "^6.1.18"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@types/react": "~18.3.12",
+    "typescript": "^5.3.3"
+  }
+}
