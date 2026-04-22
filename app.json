@@ -10,7 +10,8 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.mits.attendance.omkar"
+      "package": "com.mits.attendance.omkar",
+      "kotlinVersion": "2.0.21"
     },
     "plugins": [
       "expo-router",
