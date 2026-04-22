@@ -26,20 +26,20 @@ jobs:
           rm -rf android
           CI=1 npx expo prebuild --platform android --clean
 
-      - name: Manual Gradle Patch
-        # This fixes the "unknown property" error by manually defining the version
+      - name: Force Kotlin 2.0.21
+        # This overrides the 1.9.24 default that is crashing the build
         run: |
-          sed -i 's/kotlinVersion/ext.kotlinVersion = "2.0.21"/g' android/build.gradle
-          sed -i 's/kotlinVersion/"2.0.21"/g' android/build.gradle
+          echo "expo.kotlinVersion=2.0.21" >> android/gradle.properties
+          echo "kotlinVersion=2.0.21" >> android/gradle.properties
 
       - name: Build APK
+        working-directory: ./android
         run: |
-          cd android
           chmod +x gradlew
           ./gradlew assembleRelease
           
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: attendance-app
+          name: mits-attendance-apk
           path: android/app/build/outputs/apk/release/*.apk
