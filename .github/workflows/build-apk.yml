@@ -26,6 +26,12 @@ jobs:
           rm -rf android
           CI=1 npx expo prebuild --platform android --clean
 
+      - name: Manual Gradle Patch
+        # This fixes the "unknown property" error by manually defining the version
+        run: |
+          sed -i 's/kotlinVersion/ext.kotlinVersion = "2.0.21"/g' android/build.gradle
+          sed -i 's/kotlinVersion/"2.0.21"/g' android/build.gradle
+
       - name: Build APK
         run: |
           cd android
