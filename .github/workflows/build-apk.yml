@@ -32,12 +32,12 @@ jobs:
           java-version: ${{ github.event.inputs.jdkVersion }}
 
       - name: Install Dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Install Expo CLI
-        run: npm install -g expo-cli
+        run: |
+          npm cache clean --force
+          npm install --legacy-peer-deps
 
       - name: Prebuild Android Folder
+        # This generates the 'android' directory required for the next step
         run: npx expo prebuild --platform android --non-interactive
 
       - name: Build APK with Gradle
