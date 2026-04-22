@@ -1,11 +1,6 @@
 name: Build Expo Android APK
 on:
   workflow_dispatch:
-    inputs:
-      repo_owner_name:
-        description: "Your Repo (format: owner/repo)"
-        required: true
-        default: "OMKARREDDY8570/attendanceapp"
 
 jobs:
   build:
@@ -13,13 +8,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.inputs.repo_owner_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20  # Updated to 20 to match React Native 0.76
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -28,14 +21,10 @@ jobs:
           java-version: '17'
 
       - name: Install Dependencies
-        run: |
-          npm install --legacy-peer-deps
-
-      - name: Fix Expo Dependencies
-        # This force-corrects versions like React 18.3.2 to the correct 18.2.0
-        run: npx expo install --check
+        run: npm install --legacy-peer-deps
 
       - name: Prebuild Android Folder
+        # This will fail if app.json doesn't have a package name
         run: npx expo prebuild --platform android --non-interactive
 
       - name: Build APK with Gradle
