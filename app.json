@@ -5,8 +5,7 @@
     "version": "1.0.0",
     "newArchEnabled": true,
     "android": {
-      "package": "com.mits.attendance.omkar" 
-      // DO NOT PUT kotlinVersion HERE
+      "package": "com.mits.attendance.omkar"
     },
     "plugins": [
       "expo-router",
