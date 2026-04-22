@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       repo_url:
-        description: "https://github.com/OMKARREDDY8570/attendanceapp.git"
+        description: "YOUR REPO URL"
         required: true
-        default: "https://github.com"
+        default: "https://github.com/OMKARREDDY8570/attendanceapp.git"
 
 jobs:
   build:
