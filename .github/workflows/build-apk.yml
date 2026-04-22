@@ -9,7 +9,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -20,27 +20,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Clean & Install Dependencies
+      - name: Install & Prebuild
         run: |
-          rm -rf node_modules
           npm install --legacy-peer-deps
-
-      - name: Prebuild Android Folder
-        # This deletes all possible corrupted configs before regenerating
-        run: |
           rm -rf android
-          rm -rf .expo
           CI=1 npx expo prebuild --platform android --clean
 
-      - name: Build APK with Gradle
-        working-directory: ./android
+      - name: Build APK
         run: |
+          cd android
           chmod +x gradlew
           ./gradlew assembleRelease
-
-      - name: Upload APK
+          
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: mits-attendance-apk
+          name: attendance-app
           path: android/app/build/outputs/apk/release/*.apk
-          retention-days: 1
