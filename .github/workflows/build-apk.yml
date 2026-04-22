@@ -24,7 +24,10 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Prebuild Android Folder
-        run: CI=1 npx expo prebuild --platform android
+        # We delete the old folder first to fix the 'unknown property' error
+        run: |
+          rm -rf android
+          CI=1 npx expo prebuild --platform android --clean
 
       - name: Build APK with Gradle
         working-directory: ./android
