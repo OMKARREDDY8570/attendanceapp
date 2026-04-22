@@ -24,8 +24,7 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Prebuild Android Folder
-        # CI=1 stops the prompt, and --skip-dependency-check ignores version warnings
-        run: CI=1 npx expo prebuild --platform android --skip-dependency-check
+        run: CI=1 npx expo prebuild --platform android
 
       - name: Build APK with Gradle
         working-directory: ./android
