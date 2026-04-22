@@ -5,7 +5,7 @@ on:
       repo_url:
         description: "YOUR REPO URL"
         required: true
-        default: "https://github.com/OMKARREDDY8570/attendanceapp.git"
+        default: "OMKARREDDY8570/attendanceapp"
 
 jobs:
   build:
