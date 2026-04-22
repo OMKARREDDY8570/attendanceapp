@@ -6,10 +6,6 @@ on:
         description: "Your Repo (format: owner/repo)"
         required: true
         default: "OMKARREDDY8570/attendanceapp"
-      jdkVersion:
-        description: "OpenJDK version"
-        required: false
-        default: "17"
 
 jobs:
   build:
@@ -23,24 +19,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20 # Upgraded for better compatibility
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: ${{ github.event.inputs.jdkVersion }}
+          java-version: '17'
 
-      - name: Install Dependencies
+      - name: Clean and Install
         run: |
-          npm cache clean --force
-          npm install --legacy-peer-deps
+          npm install -g corepack
+          npm install --legacy-peer-deps --force
 
-      - name: Prebuild Android Folder
-        # This generates the 'android' directory required for the next step
+      - name: Prebuild Android
         run: npx expo prebuild --platform android --non-interactive
 
-      - name: Build APK with Gradle
+      - name: Build APK
         working-directory: ./android
         run: |
           chmod +x gradlew
@@ -49,6 +44,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: mits-attendance-apk
+          name: attendance-app
           path: android/app/build/outputs/apk/release/*.apk
-          retention-days: 1
