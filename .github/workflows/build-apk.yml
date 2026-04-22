@@ -20,13 +20,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+      - name: Clean & Install Dependencies
+        run: |
+          rm -rf node_modules
+          npm install --legacy-peer-deps
 
       - name: Prebuild Android Folder
-        # We delete the old folder first to fix the 'unknown property' error
+        # This deletes all possible corrupted configs before regenerating
         run: |
           rm -rf android
+          rm -rf .expo
           CI=1 npx expo prebuild --platform android --clean
 
       - name: Build APK with Gradle
