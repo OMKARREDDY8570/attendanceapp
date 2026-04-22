@@ -12,7 +12,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20  # Updated to 20 to match React Native 0.76
+          node-version: 20
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -24,8 +24,8 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Prebuild Android Folder
-        # This will fail if app.json doesn't have a package name
-        run: npx expo prebuild --platform android --non-interactive
+        # CI=1 stops the prompt, and --skip-dependency-check ignores version warnings
+        run: CI=1 npx expo prebuild --platform android --skip-dependency-check
 
       - name: Build APK with Gradle
         working-directory: ./android
