@@ -3,12 +3,7 @@
     "name": "MITS Attendance",
     "slug": "mits-attendance",
     "version": "1.0.0",
-    "orientation": "portrait",
-    "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "package": "com.mits.attendance.omkar"
     },
@@ -23,9 +18,6 @@
           }
         }
       ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    ]
   }
 }
